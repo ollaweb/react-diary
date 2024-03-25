@@ -30,15 +30,23 @@ function App() {
 
 	const [posts, setPosts] = useState(INITIAL_POSTS);
 
-	function addPost(item) {
+	function addPost(post) {
 		setPosts(oldPosts => [...oldPosts, {
-			id: Math.max(...oldPosts.map(post => post.id)) + 1,
-			title: item.title,
-			date: new Date(),
-			tag: item.tag,
-			text: item.text
+			id: Math.max(...oldPosts.map(p => p.id)) + 1,
+			title: post.title,
+			date: new Date(post.date),
+			tag: post.tag,
+			text: post.text
 		}]);
 	}
+
+	const sortPosts = (a, b) => {
+		if (a.date < b.date) {
+			return 1;
+		} else {
+			return -1;
+		}
+	};
 
 	return (
 		<div className='app'>
@@ -46,7 +54,7 @@ function App() {
 				<Header/>
 				<JournalAddButton/>
 				<JournalList>
-					{posts.map(el => (
+					{posts.sort(sortPosts).map(el => (
 						<CardButton key={el.id}>
 							<JournalItem
 								title={el.title}
