@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import CardButton from './components/CardButton/CardButton';
 import Header from './components/Header/Header';
@@ -10,18 +11,34 @@ import LeftPanel from './layouts/LeftPanel/LeftPanel';
 
 function App() {
 
-	const data = [
+	const INITIAL_POSTS = [
 		{
+			id:1,
 			title: 'Высадка семян на рассаду',
 			date: new Date(),
+			tag: 'Огород',
 			text: 'Сегодня я начала делать посадки семян на рассаду. Поскольку уже настали благоприятные дни.'
 		},
 		{
+			id:2,
 			title: 'Пикировка томатов',
 			date: new Date(),
+			tag: 'Огород',
 			text: 'Как правильно выполнять пикирование томатов.'
 		}
 	];
+
+	const [posts, setPosts] = useState(INITIAL_POSTS);
+
+	function addPost(item) {
+		setPosts(oldPosts => [...oldPosts, {
+			id: Math.max(...oldPosts.map(post => post.id)) + 1,
+			title: item.title,
+			date: new Date(),
+			tag: item.tag,
+			text: item.text
+		}]);
+	}
 
 	return (
 		<div className='app'>
@@ -29,17 +46,19 @@ function App() {
 				<Header/>
 				<JournalAddButton/>
 				<JournalList>
-					<CardButton>
-						<JournalItem
-							title={data[0].title}
-							date={data[0].date}
-							text={data[0].text}
-						/>
-					</CardButton>
+					{posts.map(el => (
+						<CardButton key={el.id}>
+							<JournalItem
+								title={el.title}
+								date={el.date}
+								text={el.text}
+							/>
+						</CardButton>
+					))}
 				</JournalList>
 			</LeftPanel>
 			<Body>
-				<JournalForm/>
+				<JournalForm onSubmit={addPost}/>
 			</Body>
 		</div>
 	);
