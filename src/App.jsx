@@ -30,7 +30,7 @@ function App() {
 
 	function addPost(post) {
 		setPosts(oldPosts => [...oldPosts, {
-			id: Math.max(...oldPosts.map(p => p.id)) + 1,
+			id: oldPosts.length > 0 ? Math.max(...oldPosts.map(p => p.id)) + 1 : 1,
 			title: post.title,
 			date: new Date(post.date),
 			tag: post.tag,
